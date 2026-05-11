@@ -6,6 +6,10 @@ description: |-
   This is a META capability — it discovers how to discover, producing domain-specific
   skills through Cynefin domain assessment, source ecology inference, branched search,
   lateral reading, and convergence detection. Uses github-search for GitHub-native precision.
+version: 1.0.0
+author: KONA
+license: MIT
+homepage: https://github.com/sekai-dev-team/meta-search
 triggers:
   - Before any search or task execution where no best-practice skill is cached
   - User asks "what's the best way to..." in an unfamiliar domain
