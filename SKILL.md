@@ -1,22 +1,11 @@
 ---
 name: meta-search
-description: |-
-  Universal methodology-discovery protocol. Before executing any task or search,
-  load this skill whenever no verified best-practice skill exists for the domain.
-  This is a META capability — it discovers how to discover, producing domain-specific
-  skills through Cynefin domain assessment, source ecology inference, branched search,
-  lateral reading, and convergence detection. Uses github-search for GitHub-native precision.
+description: "Universal methodology-discovery protocol. Before executing any task or search, load this skill whenever no verified best-practice skill exists for the domain. This is a META capability — it discovers how to discover, producing domain-specific skills through Cynefin domain assessment, source ecology inference, branched search, lateral reading, and convergence detection. Uses github-search for GitHub-native precision."
 version: 1.0.0
 author: KONA
 license: MIT
 homepage: https://github.com/sekai-dev-team/meta-search
-triggers:
-  - Before any search or task execution where no best-practice skill is cached
-  - User asks "what's the best way to..." in an unfamiliar domain
-  - User asks "find the optimal methodology for..." 
-  - User asks "how should I approach..." in a new area
-  - User provides critique of existing approach (triggers re-evaluation)
-platforms: all
+platforms: [linux]
 ---
 
 # Meta-Search: Universal Methodology Discovery Protocol
