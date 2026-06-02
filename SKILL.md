@@ -18,7 +18,7 @@ Before ANY task or search, run this check:
 Do we have a verified best-practice skill for this domain/task?
 ├── YES → Load it, follow it, execute.
 └── NO  → Trigger L2: Meta-Search Protocol.
-          Goal: PRODUCE a best-practice skill, then execute.
+          Goal: DISCOVER the best practice, save to KB, optionally create skill.
 ```
 
 This is not optional. It is not only for "unfamiliar" domains. Even familiar domains without a codified skill trigger this.
@@ -45,7 +45,8 @@ This is not optional. It is not only for "unfamiliar" domains. Even familiar dom
 │      ├── Branch C: Official Docs                 │
 │      ├── Branch D: Practitioner Experience       │
 │      ├── Branch E: Meta-Curation                 │
-│      └── Branch F: Self-Experiment               │
+│      ├── Branch F: Self-Experiment               │
+│      └── Branch G: Local Knowledge Base          │
 │              ↓                                   │
 │  Step 3: Lateral Cross-Validation                │
 │      └── Do independent branches point to        │
@@ -53,7 +54,7 @@ This is not optional. It is not only for "unfamiliar" domains. Even familiar dom
 │              ↓                                   │
 │  Step 4: Re-Assessment                           │
 │      ├── Domain clearer? Gap closed?             │
-│      ├── YES → Output skill, execute task        │
+│      ├── YES → Output KB note (+ skill if workflow), execute │
 │      └── NO  → Loop back to Step 0               │
 │                                                  │
 └──────────────────────────────────────────────────┘
@@ -164,6 +165,11 @@ Never use 'gh search code' (legacy engine). Always 'gh api search/code'.
 Evaluate: star count, last commit date, community activity (issues/PRs)
 Look for: meta-collections (like superpowers for CC), "awesome-*" that aggregate resources plus methods
 
+**When multiple competing PRs exist for the same feature:**
+Load `references/github-pr-landscape-navigation.md` for the full method.
+Key shortcuts: find the original issue → identify the common reviewer (gatekeeper) 
+→ read their consolidation comment → distinguish self-closure from rejection.
+
 Output: Community-consensus best tool/approach, common pitfalls, meta-collections
 ```
 
@@ -230,6 +236,34 @@ Process:
 Output: Original practice summary — the seed for a future community best practice
 ```
 
+### Branch G: Local Knowledge Base
+
+**When**: As a **peer-level source** alongside external branches. The vault may surface forgotten context, adjacent-domain research, or conceptual backlinks that complement — but do not replace — external discovery. If the answer were already cleanly captured in the KB, meta-search wouldn't have been triggered in the first place.
+
+```
+Search patterns:
+  mcp_knowledge_search(query="[topic]")                 ← hybrid semantic + keyword
+  mcp_knowledge_search(query="[domain] best practice")
+  mcp_knowledge_search(query="[domain] comparison")
+  mcp_knowledge_list_notes()                            ← browse all vault notes
+
+Deep read if search hits:
+  mcp_knowledge_get_note(path="...")                    ← full markdown with frontmatter + backlinks
+
+Backlink traversal:
+  After reading a relevant note, follow its backlinks to discover connected concepts.
+  Example: a note on "agent memory paradigms" backlinks to "DS-004 pipeline"
+           → the cross-domain relationship may inform the current search.
+
+Index maintenance:
+  mcp_knowledge_reindex(path="...")                     ← reindex single file after edit
+  mcp_knowledge_reindex()                               ← incremental vault reindex
+
+Output: Prior research fragments, domain taxonomies, cross-domain backlinks.
+        Feeds into Step 3 cross-validation as an additional independent source.
+        Does NOT replace external branches — the KB is complementary memory, not a cache.
+```
+
 ---
 
 ## Step 3: Lateral Cross-Validation
@@ -246,6 +280,8 @@ Convergence patterns:
   ⚠️ Branches disagree → domain is contested → mark as Complicated, document tradeoffs
   ❌ Only one branch has info → incomplete → continue looping
   ❌ No branches have useful info → domain is Complex/Chaotic or too new → Branch F
+  🔄 Local KB has prior research → treat your past self as an additional independent source;
+     cross-check: does the external search align with what you already knew?
 ```
 
 **Key anti-pattern**: Do NOT accept a finding from a single branch without verification. Even official docs can be outdated. Even community consensus can be a local maximum.
@@ -272,29 +308,43 @@ Convergence patterns:
 ```
 CONVERGENCE:
   Multiple independent sources point to same consensus
-  → Output: skill for the domain, marked with confidence level
+  → Output: knowledge base note + optionally skill (see Output Routing below)
 
 DIMINISHING RETURNS:
   After 3 full loops, gap reduced to acceptable residual uncertainty
-  → Output: skill with "current best understanding", tagged with uncertainty notes
+  → Output: knowledge base note with "current best understanding", tagged with uncertainty
 
 EXHAUSTION + PIONEER:
   Branches A-E exhausted, no convergence found
   → Switch to Branch F (self-experiment)
-  → Output: skill based on original practice, marked as "pioneer/practitioner-validated"
+  → Output: knowledge base note based on original practice, marked "pioneer"
 
 DEGENERATE LOOP:
   Same information found repeatedly across loops, no new insight
-  → Stop. Domain is in Complex/Chaotic state. Output skill with "no stable best practice yet"
+  → Stop. Domain is in Complex/Chaotic state. Output note with "no stable best practice yet"
 ```
+
+### Output Routing: Knowledge Base Note vs Skill
+
+**ALL research results go to the knowledge base first.** Then route based on content type:
+
+| Content Type | Destination | Examples |
+|---|---|---|
+| **Workflow / Procedural** | Knowledge base note **+** Skill | Debugging protocol, deployment checklist, CI/CD setup steps, code review process |
+| **Reference / Declarative** | Knowledge base note only | Domain taxonomy, framework comparison, concept explanation, tool evaluation, source ecology map |
+
+**Decision rule**: Can someone read this and immediately execute a multi-step procedure?
+- YES → also create a skill (actionable, step-by-step, with commands)
+- NO → knowledge base note is sufficient (concept, comparison, reference)
 
 ### Output Format
 
 ```
 After loop exit, produce:
-  1. Domain skill (codified best practice)
-  2. Metadata: Cynefin classification, confidence level, source branches used
-  3. Known gaps or uncertainties (for future re-evaluation)
+  1. Knowledge base note (always) — research results, key findings, source citations
+  2. Skill (only if workflow) — codified step-by-step procedure with concrete commands
+  3. Metadata: Cynefin classification, confidence level, source branches used
+  4. Known gaps or uncertainties (for future re-evaluation)
 ```
 
 ---
@@ -310,6 +360,8 @@ The user's credibility hierarchy is applied during branch evaluation:
 | **L3: Community Discussion** | Branch B — requires cross-reference with other branches. |
 | **L4: Official Docs** | Branch C — authoritative but may be incomplete or outdated. |
 | **L5: AI Summary** | Used as pointer/starting point only. NEVER as authoritative source. Always verify. |
+
+For the full cross-disciplinary map — Information Foraging Theory, Evidence-Based Medicine Pyramid, Admiralty Code (NATO AJP-2.1), CRAAP Test, Lateral Reading (Stanford SHEG), Bayesian Epistemology, and KONA's practical hierarchy cross-mapped to each — see `references/information-credibility-frameworks.md`.
 
 ---
 
@@ -327,7 +379,7 @@ Step 2:
 Step 3: B confirms C's concepts + extends with community best practices
         D identifies risks B and C didn't cover
         → Convergence: superpowers + docker sandbox = best practice
-Step 4: Gap closed → Output skill
+Step 4: Gap closed → Output KB note + skill (workflow type)
 ```
 
 ### Example 2: Investment Decision Model (Hypothetical)
@@ -340,7 +392,7 @@ Step 2:
      AI query: "core investment decision frameworks" → MPT, Black-Litterman, Kelly
   D: "factor investing in practice" → AQR papers, practitioner critiques
 Step 3: A and D diverge on factor timing → domain is contested, document tradeoffs
-Step 4: Gap partially closed → Output skill with "contested domain" tag
+Step 4: Gap partially closed → Output KB note with "contested domain" tag
 ```
 
 ### Example 3: VPN/Tool Selection (Hypothetical)
@@ -354,12 +406,14 @@ Step 2:
   B: Specialized forums + DuyaoSS-type sites → hands-on speed tests
   D: "VPN review experience" from trusted security researchers
 Step 3: Cross-check: Do B and D agree on top performers?
-Step 4: If converging → Output skill. If conflicting → continue loop.
+Step 4: If converging → Output KB note (+ skill if workflow). If conflicting → continue loop.
 ```
 
 ---
 
 ## Pitfalls
+
+0. **Frontmatter incompatibility**: When syncing from GitHub, `platforms: all` and `triggers` fields cause "not supported on this platform" errors in Hermes. Fix: use `platforms: [linux]` and remove `triggers`. Description should be a quoted string, not YAML literal block (`|-`). See hermes-agent-skill-authoring skill for valid frontmatter spec.
 
 1. **Skipping Step 0**: Jumping straight to search without domain assessment leads to wrong search strategy
 2. **Single-branch trap**: Accepting findings from one branch without cross-validation. Even official docs can be wrong.
@@ -367,4 +421,16 @@ Step 4: If converging → Output skill. If conflicting → continue loop.
 4. **Linear thinking**: Treating Phase 1→2→3→4 as sequential rather than cyclical. Always loop.
 5. **AI as authority**: Using AI answers as ground truth rather than as pointers to actual sources.
 6. **Stopping too early**: Accepting the first seemingly-good answer without verifying against other branches.
-7. **Not outputting a skill**: Meta-search without producing a reusable skill is wasted effort. The output MUST be a skill.
+7. **Not outputting a knowledge base note**: Meta-search without saving research results to the knowledge base is wasted effort. The output MUST include a knowledge base note. Only create a skill if the result is a workflow/procedure — reference material goes to the KB only.
+
+8. **SDK availability ≠ trivial integration cost.** Finding a Python/TS SDK during meta-search signals protocol maturity, not integration simplicity. The adapter layer (session model mapping, streaming lifecycle, error recovery, context injection) dominates development effort regardless of SDK quality. Each agent's extension mechanism differs — what's a thin plugin for one agent (Claude Code MCP server) may require a platform-level fork for another (Hermes gateway). When estimating integration cost after SDK discovery: assume 150-300 lines of adapter code, not 50. This pitfall triggered: A2A Relay research session 2026-05-14, where Synadia Python SDK was found but Hermes adapter complexity was underestimated.
+
+## Domain Knowledge Banks
+
+Completed meta-search research results are saved as reference files. Load relevant ones before re-researching the same domain:
+
+| Reference File | Domain | Key Sources |
+|---------------|--------|-------------|
+| `references/lifelong-learning-llm-agents.md` | AI agent continuous perception, memory architecture, lifelong learning | Zheng et al. TPAMI 2026, PMA protocol, Second-Me, LifelongAgentBench |
+| `references/agent-memory-paradigms.md` | Episodic→Semantic memory transition, consolidation triggers, concept-mediated graphs, KNN density clustering | RecMem (2026), GAAMA (2026), SYNAPSE, Dual-Process, Human-Inspired Memory |
+| `references/concept-lookup-mechanisms.md` | Concept page discovery when new episodic info arrives — lookup strategies across 5 memory paradigms | RecMem, GAAMA, SYNAPSE, Dual-Process, Human-Inspired — with DS-004 design implications |
